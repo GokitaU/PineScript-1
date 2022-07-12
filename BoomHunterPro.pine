@@ -238,7 +238,7 @@ q4 = Quotient4 * esize + ey
 // Plot33 = plot(q3, color=color.new(color.red, 50), linewidth=1, title='Quotient 1')
 
 // ⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️
-Plot44 = plot(q4, color=color.new(color.red, 50), linewidth=1, title='Quotient 2') // ayush
+Plot44 = plot(q4, color=color.red, linewidth=2, title='Quotient 2') // ayush
 // ⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️
 // fill(Plot33, Plot44, color=color.new(color.red, 90))
 

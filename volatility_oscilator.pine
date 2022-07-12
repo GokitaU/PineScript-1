@@ -3,14 +3,14 @@
 
 //@version=4
 study("Volatility Oscillator", resolution = "")
-length = input(100)
+VolOscLen = input(100)
 
 // Data to use in strategy building
 spike = close - open  // ayush
-x = stdev(spike,length) // ayush
-y = stdev(spike,length) * -1  // ayush
+VolOscX = stdev(spike,VolOscLen) // ayush
+VolOscY = stdev(spike,VolOscLen) * -1  // ayush
 
 // plotted data that we use in strategy building
-plot(spike, color = color.white, linewidth = 2, title = "Spike Linel")
-p1 = plot(x, "Upper Line") 
-p2 = plot(y, "Lower Line") 
+// plot(spike, color = color.white, linewidth = 2, title = "Spike Linel")
+// volOscPlot1 = plot(VolOscX, "Upper Line") 
+// volOscPlot2 = plot(VolOscY, "Lower Line") 

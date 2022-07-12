@@ -1,30 +1,30 @@
-//@version=4
+//@version=5
 //Basic Hull Ma Pack tinkered by InSilico 
-study("Hull Suite by InSilico", overlay=true)
+indicator("Hull Suite by InSilico", overlay=true)
 
 //INPUT
 hullSrc = input(close, title="Hull Source")
-modeSwitch = input("Hma", title="Hull Variation", options=["Hma", "Thma", "Ehma"])
+modeSwitch = input.string("Hma", title="Hull Variation", options=["Hma", "Thma", "Ehma"])
 
 hullLength = input(200, title="Length(180-200 for floating S/R , 55 for swing entry)") // changed from 55 to 200
 hullLengthMult = input(2.0, title="Length multiplier (Used to view higher timeframes with straight band)") // changed from 1.0 to 2.0
 
 useHtf = input(false, title="Show Hull MA from X timeframe? (good for scalping)")
-htf = input("240", title="Higher timeframe", type=input.resolution)
+htf = input.timeframe("240", title="Higher timeframe")
 
 switchColor = input(true, "Color Hull according to trend?")
 candleCol = input(false,title="Color candles based on Hull's Trend?")
 visualSwitch  = input(true, title="Show as a Band?")
 thicknesSwitch = input(1, title="Line Thickness")
-transpSwitch = input(40, title="Band Transparency",step=5)
+transpSwitch = input.int(40, title="Band Transparency",step=5)
 
 //FUNCTIONS
 //HMA
-HMA(_src, _length) =>  wma(2 * wma(_src, _length / 2) - wma(_src, _length), round(sqrt(_length)))
+HMA(_src, _length) =>  ta.wma(2 * ta.wma(_src, _length / 2) - ta.wma(_src, _length), math.round(math.sqrt(_length)))
 //EHMA    
-EHMA(_src, _length) =>  ema(2 * ema(_src, _length / 2) - ema(_src, _length), round(sqrt(_length)))
+EHMA(_src, _length) =>  ta.ema(2 * ta.ema(_src, _length / 2) - ta.ema(_src, _length), math.round(math.sqrt(_length)))
 //THMA    
-THMA(_src, _length) =>  wma(wma(_src,_length / 3) * 3 - wma(_src, _length / 2) - wma(_src, _length), _length)
+THMA(_src, _length) =>  ta.wma(ta.wma(_src,_length / 3) * 3 - ta.wma(_src, _length / 2) - ta.wma(_src, _length), _length)
     
 //SWITCH
 Mode(modeSwitch, hullSrc, len) =>
@@ -34,7 +34,7 @@ Mode(modeSwitch, hullSrc, len) =>
 
 //OUT
 _hull = Mode(modeSwitch, hullSrc, int(hullLength * hullLengthMult))
-HULL = useHtf ? security(syminfo.ticker, htf, _hull) : _hull
+HULL = useHtf ? request.security(syminfo.ticker, htf, _hull) : _hull
 MHULL = HULL[0]
 SHULL = HULL[2]
 
@@ -43,17 +43,16 @@ SHULL = HULL[2]
 //COLOR
 hullColor = switchColor ? (HULL > HULL[2] ? #00ff00 : #ff0000) : #ff9800
 
-//PLOT
-///< Frame
-// Fi1 = plot(MHULL, title="MHULL", color=hullColor, linewidth=thicknesSwitch, transp=50)
-// Fi2 = plot(visualSwitch ? SHULL : na, title="SHULL", color=hullColor, linewidth=thicknesSwitch, transp=50)
-// alertcondition(crossover(MHULL, SHULL), title="Hull trending up.", message="Hull trending up.")
-// alertcondition(crossover(SHULL, MHULL), title="Hull trending down.", message="Hull trending down.")
-///< Ending Filler
-// fill(Fi1, Fi2, title="Band Filler", color=hullColor, transp=transpSwitch)
-///BARCOLOR
+// //PLOT
+// ///< Frame
+// Fi1 = plot(MHULL, title="MHULL", color=color.new(hullColor,50) , linewidth=thicknesSwitch)
+// Fi2 = plot(visualSwitch ? SHULL : na, title="SHULL", color=color.new(hullColor,50), linewidth=thicknesSwitch)
+// alertcondition(ta.crossover(MHULL, SHULL), title="Hull trending up.", message="Hull trending up.")
+// alertcondition(ta.crossover(SHULL, MHULL), title="Hull trending down.", message="Hull trending down.")
+// ///< Ending Filler
+// fill(Fi1, Fi2, title="Band Filler", color=color.new(hullColor,transpSwitch))
+// ///BARCOLOR
 // barcolor(color = candleCol ? (switchColor ? hullColor : na) : na)
-
 
 // conclusion ******************************* ayush
 // agar MHULL SHULL se bada ho to green nahi to red

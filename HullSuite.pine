@@ -9,11 +9,11 @@ modeSwitch = input("Hma", title="Hull Variation", options=["Hma", "Thma", "Ehma"
 length = input(200, title="Length(180-200 for floating S/R , 55 for swing entry)") // changed from 55 to 200
 lengthMult = input(2.0, title="Length multiplier (Used to view higher timeframes with straight band)") // changed from 1.0 to 2.0
 
-// useHtf = input(false, title="Show Hull MA from X timeframe? (good for scalping)")
+useHtf = input(false, title="Show Hull MA from X timeframe? (good for scalping)")
 htf = input("240", title="Higher timeframe", type=input.resolution)
 
 switchColor = input(true, "Color Hull according to trend?")
-// candleCol = input(false,title="Color candles based on Hull's Trend?")
+candleCol = input(false,title="Color candles based on Hull's Trend?")
 visualSwitch  = input(true, title="Show as a Band?")
 thicknesSwitch = input(1, title="Line Thickness")
 transpSwitch = input(40, title="Band Transparency",step=5)
@@ -57,3 +57,5 @@ hullColor = switchColor ? (HULL > HULL[2] ? #00ff00 : #ff0000) : #ff9800
 
 // conclusion ******************************* ayush
 // agar MHULL SHULL se bada ho to green nahi to red
+
+

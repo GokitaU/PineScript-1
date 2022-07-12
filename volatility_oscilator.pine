@@ -43,105 +43,109 @@ _inRange(cond) =>
 	bars = barssince(cond == true)
 	rangeLower <= bars and bars <= rangeUpper
 
-//------------------------------------------------------------------------------
-// Regular Bullish
-// Osc: Higher Low
 
-oscHL = osc2[lbR] > valuewhen(plFound, osc2[lbR], 1) and _inRange(plFound[1])
+// *********************************************************************************************************************************
+// //------------------------------------------------------------------------------
+// // Regular Bullish
+// // Osc: Higher Low
 
-// Price: Lower Low
+// oscHL = osc2[lbR] > valuewhen(plFound, osc2[lbR], 1) and _inRange(plFound[1])
 
-priceLL = low[lbR] < valuewhen(plFound, low[lbR], 1)
-bullCond = plotBull and priceLL and oscHL and plFound and repaint
+// // Price: Lower Low
 
-
-plotshape(
-	 bullCond ? osc2[lbR] : na,
-	 offset=-lbR,
-	 title="Regular Bullish Label",
-	 text="R",
-	 style=shape.labelup,
-	 location=location.absolute,
-	 color=bullColor,
-	 textcolor=textColor,
-	 transp=0
-	 )
-
-//------------------------------------------------------------------------------
-// Hidden Bullish
-// Osc: Lower Low
-
-oscLL = osc2[lbR] < valuewhen(plFound, osc2[lbR], 1) and _inRange(plFound[1])
-
-// Price: Higher Low
-
-priceHL = low[lbR] > valuewhen(plFound, low[lbR], 1)
-hiddenBullCond = plotHiddenBull and priceHL and oscLL and plFound and repaint
+// priceLL = low[lbR] < valuewhen(plFound, low[lbR], 1)
+// bullCond = plotBull and priceLL and oscHL and plFound and repaint
 
 
+// plotshape(
+// 	 bullCond ? osc2[lbR] : na,
+// 	 offset=-lbR,
+// 	 title="Regular Bullish Label",
+// 	 text="R",
+// 	 style=shape.labelup,
+// 	 location=location.absolute,
+// 	 color=bullColor,
+// 	 textcolor=textColor,
+// 	 transp=0
+// 	 )
 
-plotshape(
-	 hiddenBullCond ? osc2[lbR] : na,
-	 offset=-lbR,
-	 title="Hidden Bullish Label",
-	 text="H",
-	 style=shape.labelup,
-	 location=location.absolute,
-	 color=bullColor,
-	 textcolor=textColor,
-	 transp=0
-	 )
+// //------------------------------------------------------------------------------
+// // Hidden Bullish
+// // Osc: Lower Low
 
-//------------------------------------------------------------------------------
-// Regular Bearish
-// Osc: Lower High
+// oscLL = osc2[lbR] < valuewhen(plFound, osc2[lbR], 1) and _inRange(plFound[1])
 
-oscLH = osc2[lbR] < valuewhen(phFound, osc2[lbR], 1) and _inRange(phFound[1])
+// // Price: Higher Low
 
-// Price: Higher High
-
-priceHH = high[lbR] > valuewhen(phFound, high[lbR], 1)
-
-bearCond = plotBear and priceHH and oscLH and phFound and repaint
+// priceHL = low[lbR] > valuewhen(plFound, low[lbR], 1)
+// hiddenBullCond = plotHiddenBull and priceHL and oscLL and plFound and repaint
 
 
 
-plotshape(
-	 bearCond ? osc2[lbR] : na,
-	 offset=-lbR,
-	 title="Regular Bearish Label",
-	 text="R",
-	 style=shape.labeldown,
-	 location=location.absolute,
-	 color=bearColor,
-	 textcolor=textColor,
-	 transp=0
-	 )
+// plotshape(
+// 	 hiddenBullCond ? osc2[lbR] : na,
+// 	 offset=-lbR,
+// 	 title="Hidden Bullish Label",
+// 	 text="H",
+// 	 style=shape.labelup,
+// 	 location=location.absolute,
+// 	 color=bullColor,
+// 	 textcolor=textColor,
+// 	 transp=0
+// 	 )
 
-//------------------------------------------------------------------------------
-// Hidden Bearish
-// Osc: Higher High
+// //------------------------------------------------------------------------------
+// // Regular Bearish
+// // Osc: Lower High
 
-oscHH = osc2[lbR] > valuewhen(phFound, osc2[lbR], 1) and _inRange(phFound[1])
+// oscLH = osc2[lbR] < valuewhen(phFound, osc2[lbR], 1) and _inRange(phFound[1])
 
-// Price: Lower High
+// // Price: Higher High
 
-priceLH = high[lbR] < valuewhen(phFound, high[lbR], 1)
+// priceHH = high[lbR] > valuewhen(phFound, high[lbR], 1)
 
-hiddenBearCond = plotHiddenBear and priceLH and oscHH and phFound and repaint
+// bearCond = plotBear and priceHH and oscLH and phFound and repaint
 
 
 
-plotshape(
-	 hiddenBearCond ? osc2[lbR] : na,
-	 offset=-lbR,
-	 title="Hidden Bearish Label",
-	 text="H",
-	 style=shape.labeldown,
-	 location=location.absolute,
-	 color=bearColor,
-	 textcolor=textColor,
-	 transp=0
-	 )
+// plotshape(
+// 	 bearCond ? osc2[lbR] : na,
+// 	 offset=-lbR,
+// 	 title="Regular Bearish Label",
+// 	 text="R",
+// 	 style=shape.labeldown,
+// 	 location=location.absolute,
+// 	 color=bearColor,
+// 	 textcolor=textColor,
+// 	 transp=0
+// 	 )
 
-//barcolor(color = spike > 0 ? color.green : color.red )
+// //------------------------------------------------------------------------------
+// // Hidden Bearish
+// // Osc: Higher High
+
+// oscHH = osc2[lbR] > valuewhen(phFound, osc2[lbR], 1) and _inRange(phFound[1])
+
+// // Price: Lower High
+
+// priceLH = high[lbR] < valuewhen(phFound, high[lbR], 1)
+
+// hiddenBearCond = plotHiddenBear and priceLH and oscHH and phFound and repaint
+
+
+
+// plotshape(
+// 	 hiddenBearCond ? osc2[lbR] : na,
+// 	 offset=-lbR,
+// 	 title="Hidden Bearish Label",
+// 	 text="H",
+// 	 style=shape.labeldown,
+// 	 location=location.absolute,
+// 	 color=bearColor,
+// 	 textcolor=textColor,
+// 	 transp=0
+// 	 )
+
+// //barcolor(color = spike > 0 ? color.green : color.red )
+
+// ************************************************************************************************************************************

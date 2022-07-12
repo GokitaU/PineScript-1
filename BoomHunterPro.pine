@@ -235,9 +235,12 @@ trig = ta.sma(wt3, smalen)
 
 q3 = Quotient3 * esize + ey
 q4 = Quotient4 * esize + ey
-Plot33 = plot(q3, color=color.new(color.red, 50), linewidth=1, title='Quotient 1')
+// Plot33 = plot(q3, color=color.new(color.red, 50), linewidth=1, title='Quotient 1')
+
+// ⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️
 Plot44 = plot(q4, color=color.new(color.red, 50), linewidth=1, title='Quotient 2') // ayush
-fill(Plot33, Plot44, color=color.new(color.red, 90))
+// ⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️
+// fill(Plot33, Plot44, color=color.new(color.red, 90))
 
 //Plot EOT
 q1 = Quotient1 * esize + ey
@@ -260,8 +263,8 @@ lsma = ta.linreg(wt3, lsmaline, 0)
 
 q5 = Quotient5 * esize2 + ey2
 q6 = Quotient6 * esize2 + ey2
-Plot54 = plot(showdboom ? q6 : na, color=color.new(color.blue, 0), linewidth=1, title='Quotient 1')
-Plot55 = plot(q5, color=theme == 'Light' ? color.new(color.orange, 0) : color.new(color.yellow, 0), linewidth=1, title='Quotient 1')
+// Plot54 = plot(showdboom ? q6 : na, color=color.new(color.blue, 0), linewidth=1, title='Quotient 1')
+// Plot55 = plot(q5, color=theme == 'Light' ? color.new(color.orange, 0) : color.new(color.yellow, 0), linewidth=1, title='Quotient 1')
 //Conditions
 sma200 = ta.sma(close, 200)
 entry = ta.crossunder(Quotient2, line1)
@@ -271,8 +274,8 @@ over = ta.cross(Quotient5, Quotient6) and Quotient5 > 0.5
 over2 = ta.crossover(Quotient5, Quotient6) and Quotient5 > 0.5
 over3 = ta.cross(Quotient3, Quotient4) and Quotient3 > 0
 enter = ta.crossover(q1, trigger) and q1 < lsma
-plotshape(showentry ? over : na, title='Exit Warning', location=location.bottom, style=shape.circle, size=size.tiny, color=color.new(color.orange, 0))
-plotshape(showentry ? over3 : na, title='Exit Warning', location=location.bottom, style=shape.circle, size=size.tiny, color=color.new(color.red, 0), text='Overbought')
+// plotshape(showentry ? over : na, title='Exit Warning', location=location.bottom, style=shape.circle, size=size.tiny, color=color.new(color.orange, 0))
+// plotshape(showentry ? over3 : na, title='Exit Warning', location=location.bottom, style=shape.circle, size=size.tiny, color=color.new(color.red, 0), text='Overbought')
 
 // Breaks - luxalgo
 toggleBreaks = input.bool(false, title='Show Break Lines?', group='Support and Resistance Breaks')
@@ -291,9 +294,9 @@ highUsePivot = fixnan(ta.pivothigh(q1, leftBars, rightBars)[1])
 lowUsePivot = fixnan(ta.pivotlow(q1, leftBars2, rightBars2)[1])
 lowUsePivot2 = fixnan(ta.pivotlow(q1, leftBars3, rightBars3)[1])
 highUsePivot2 = fixnan(ta.pivothigh(q1, leftBars3, rightBars3)[1])
-r1 = plot(toggleBreaks ? highUsePivot : na, color=ta.change(highUsePivot) ? na : color.red, linewidth=1, offset=-(rightBars + 1), title='Resistance')
-s2 = plot(toggleBreaks ? lowUsePivot2 : na, color=ta.change(lowUsePivot2) ? na : color.silver, linewidth=1, offset=-(rightBars3 + 1), title='Support')
-s1 = plot(toggleBreaks ? lowUsePivot : na, color=ta.change(lowUsePivot) ? na : color.blue, linewidth=1, offset=-(rightBars2 + 1), title='Support')
+// r1 = plot(toggleBreaks ? highUsePivot : na, color=ta.change(highUsePivot) ? na : color.red, linewidth=1, offset=-(rightBars + 1), title='Resistance')
+// s2 = plot(toggleBreaks ? lowUsePivot2 : na, color=ta.change(lowUsePivot2) ? na : color.silver, linewidth=1, offset=-(rightBars3 + 1), title='Support')
+// s1 = plot(toggleBreaks ? lowUsePivot : na, color=ta.change(lowUsePivot) ? na : color.blue, linewidth=1, offset=-(rightBars2 + 1), title='Support')
 
 crossover = ta.crossover(q1, trigger)
 crossunder = ta.crossunder(q1, trigger)
@@ -365,11 +368,14 @@ if ta.crossunder(q1, lowUsePivot2) and dbreak2 == 1
 
 
 
-Plot = plot(q1, color=cross == 1 ? #00ffaa : drag >= dragno ? color.purple : Quotient1 <= -0.8 ? color.yellow : Quotient3 <= -0.9 ? color.white : cross == 0 ? color.red : color.gray, linewidth=2, title='Quotient 2', trackprice=true)
-Plot4 = plot(q1, color=osccol, linewidth=2, title='Quotient 2')
+// Plot = plot(q1, color=cross == 1 ? #00ffaa : drag >= dragno ? color.purple : Quotient1 <= -0.8 ? color.yellow : Quotient3 <= -0.9 ? color.white : cross == 0 ? color.red : color.gray, linewidth=2, title='Quotient 2', trackprice=true)
+// Plot4 = plot(q1, color=osccol, linewidth=2, title='Quotient 2')
 
+// ⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️
 Plot3 = plot(trigger, color=trigcol, linewidth=2, title='Quotient 1') // ayush 2
-plot(ext1, 'Pressure', color=wt2 < 20 ? #00ffaa : wt2 > 80 ? color.red : na, style=plot.style_circles, linewidth=2, transp=10)
+// ⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️
+
+// plot(ext1, 'Pressure', color=wt2 < 20 ? #00ffaa : wt2 > 80 ? color.red : na, style=plot.style_circles, linewidth=2, transp=10)
 
 warn = ta.crossover(Quotient3, -0.9)
 warn2 = ta.crossover(Quotient1, -0.9)
@@ -385,23 +391,23 @@ enter7 = Quotient3 <= -0.9 and ta.crossover(q1, trigger)
 senter3 = Quotient3 >= -0.9 and ta.crossunder(q1, trigger) and ta.barssince(warn3) <= 7 and q1 >= 99 and ta.barssince(ta.crossover(q1, 80)) <= 21  // and Quotient3 <= -0.6 // and close > sma // QUALITY ENTRIES
 
 //plotshape(enter2, title="Boom!", location=location.top, style=shape.circle, size=size.normal, color=color.yellow, transp=0)
-plotshape(showlongs and enter6 and q1 <= 60, title='Long gray', text='Long', style=shape.labeldown, location=location.top, color=color.new(color.silver, 20), textcolor=color.new(color.white, 20), size=size.tiny)
-plotshape(showlongs and enter7, title='Long yellow', text='Long', style=shape.labeldown, location=location.top, color=color.new(color.yellow, 20), textcolor=color.new(color.white, 20), size=size.tiny)
-plotshape(showlongs and enter5, title='Long blue', text='Long', style=shape.labeldown, location=location.top, color=color.new(color.blue, 20), textcolor=color.new(color.white, 20), size=size.tiny)
-plotshape(showlongs and enter3, title='Long Lime', text='Long', style=shape.labeldown, location=location.top, color=color.new(color.lime, 20), textcolor=color.new(color.white, 20), size=size.tiny)
+// plotshape(showlongs and enter6 and q1 <= 60, title='Long gray', text='Long', style=shape.labeldown, location=location.top, color=color.new(color.silver, 20), textcolor=color.new(color.white, 20), size=size.tiny)
+// plotshape(showlongs and enter7, title='Long yellow', text='Long', style=shape.labeldown, location=location.top, color=color.new(color.yellow, 20), textcolor=color.new(color.white, 20), size=size.tiny)
+// plotshape(showlongs and enter5, title='Long blue', text='Long', style=shape.labeldown, location=location.top, color=color.new(color.blue, 20), textcolor=color.new(color.white, 20), size=size.tiny)
+// plotshape(showlongs and enter3, title='Long Lime', text='Long', style=shape.labeldown, location=location.top, color=color.new(color.lime, 20), textcolor=color.new(color.white, 20), size=size.tiny)
 
-plotshape(showshorts ? senter3 : na, title='Break', text='Short', style=shape.labeldown, location=location.top, color=color.new(color.red, 20), textcolor=color.new(color.white, 20), size=size.tiny)
+// plotshape(showshorts ? senter3 : na, title='Break', text='Short', style=shape.labeldown, location=location.top, color=color.new(color.red, 20), textcolor=color.new(color.white, 20), size=size.tiny)
 
 
-plotshape(ta.crossover(q1, highUsePivot) and dbreak >= 1 and ubreak <= 1, title='Break', style=shape.triangleup, location=location.bottom, color=color.new(#00ffaa, 0), size=size.tiny, text='Continuation')
+// plotshape(ta.crossover(q1, highUsePivot) and dbreak >= 1 and ubreak <= 1, title='Break', style=shape.triangleup, location=location.bottom, color=color.new(#00ffaa, 0), size=size.tiny, text='Continuation')
 
 allbars = input(false, title='Show Bar Colors?')
 barc = input(false, title='Show Pump Bar Colors?')
-barcolor(allbars and drag >= dragno ? color.purple : allbars and Quotient3 <= -0.9 ? color.white : allbars and Quotient1 <= -0.9 ? color.yellow : na)
-barcolor(allbars and barc and q1 > trigger ? #00ffaa : allbars and barc and q1 < trigger ? color.red : allbars and barc ? color.gray : na)
+// barcolor(allbars and drag >= dragno ? color.purple : allbars and Quotient3 <= -0.9 ? color.white : allbars and Quotient1 <= -0.9 ? color.yellow : na)
+// barcolor(allbars and barc and q1 > trigger ? #00ffaa : allbars and barc and q1 < trigger ? color.red : allbars and barc ? color.gray : na)
 
-plotshape(ta.barssince(ta.crossover(wt2,80)) <= 1 and ta.crossunder(wt2,80) ? wt2 + 9 : na, location = location.absolute, style = shape.triangledown, color = color.yellow, size = size.tiny)//, text = "Bounce", textcolor = color.white)
-plotshape(ta.barssince(ta.crossunder(wt2,20)) <= 1 and ta.crossover(wt2,20) ? wt2 - 9 : na, location = location.absolute, style = shape.triangleup, color = color.yellow, size = size.tiny)//, text = "Bounce", textcolor = color.white)
+// plotshape(ta.barssince(ta.crossover(wt2,80)) <= 1 and ta.crossunder(wt2,80) ? wt2 + 9 : na, location = location.absolute, style = shape.triangledown, color = color.yellow, size = size.tiny)//, text = "Bounce", textcolor = color.white)
+// plotshape(ta.barssince(ta.crossunder(wt2,20)) <= 1 and ta.crossover(wt2,20) ? wt2 - 9 : na, location = location.absolute, style = shape.triangleup, color = color.yellow, size = size.tiny)//, text = "Bounce", textcolor = color.white)
 
 // //ALERTS
 // alertcondition(crossover, title='Crossover')

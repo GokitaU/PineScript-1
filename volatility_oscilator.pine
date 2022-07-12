@@ -1,14 +1,14 @@
 // This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
 // © veryfid
 
-//@version=4
-study("Volatility Oscillator", resolution = "")
+//@version=5
+indicator("Volatility oscilator")
 VolOscLen = input(100)
 
 // Data to use in strategy building
 spike = close - open  // ayush
-VolOscX = stdev(spike,VolOscLen) // ayush
-VolOscY = stdev(spike,VolOscLen) * -1  // ayush
+VolOscX = ta.stdev(spike,VolOscLen) // ayush
+VolOscY = ta.stdev(spike,VolOscLen) * -1  // ayush
 
 // plotted data that we use in strategy building
 // plot(spike, color = color.white, linewidth = 2, title = "Spike Linel")

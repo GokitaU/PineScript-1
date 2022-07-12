@@ -7,13 +7,13 @@ title = 'Boom Hunter Pro'
 stitle = 'Boom Pro'
 version = ' 1.022'
 indicator(title=title + version, shorttitle=stitle, overlay=false, timeframe='')
-theme = 'Dark'  //, "Theme:", options=["Dark", "Light"], group = "Main Settings", inline = "main")
-showfib = input.bool(defval=false, title='Show Fibonacci Lines?', group='Main Settings', inline='main2')
-showentry = input.bool(defval=true, title='Show Entry and Exit Points?', group='Main Settings')
+// theme = 'Dark'  //, "Theme:", options=["Dark", "Light"], group = "Main Settings", inline = "main")
+// showfib = input.bool(defval=false, title='Show Fibonacci Lines?', group='Main Settings', inline='main2')
+// showentry = input.bool(defval=true, title='Show Entry and Exit Points?', group='Main Settings')
 square = input.bool(true, title='Square Line?', group='Main Settings')
-showdboom = input.bool(true, title='Show Downward Boom Line?', group='Main Settings')
-showlongs = input.bool(true, title='Show Long Entries?', group='Main Settings')
-showshorts = input.bool(true, title='Show Short Entries?', group='Main Settings')
+// showdboom = input.bool(true, title='Show Downward Boom Line?', group='Main Settings')
+// showlongs = input.bool(true, title='Show Long Entries?', group='Main Settings')
+// showshorts = input.bool(true, title='Show Short Entries?', group='Main Settings')
 //showsignals = input(defval = false, title = "Show Alerts?", group = "Main Settings")
 //Quotient
 LPPeriod = input.int(6, title='Quotient | LPPeriod', inline='quotient', group='EOT 1 (Main Oscillator)')
@@ -57,13 +57,13 @@ if square
     K13 := 0.9999
     K33 := -0.9999
     K33
-//FIB LINES
+// //FIB LINES
 
-hline(showfib ? 84 : na, linestyle=hline.style_solid, color=color.new(color.blue, 50))
-hline(showfib ? 64 : na, linestyle=hline.style_solid, color=color.new(color.blue, 50))
-hline(showfib ? 50 : na, linestyle=hline.style_solid, color=color.new(color.blue, 50))
-hline(showfib ? 36 : na, linestyle=hline.style_solid, color=color.new(color.blue, 50))
-hline(showfib ? 18 : na, linestyle=hline.style_solid, color=color.new(color.blue, 50))
+// hline(showfib ? 84 : na, linestyle=hline.style_solid, color=color.new(color.blue, 50))
+// hline(showfib ? 64 : na, linestyle=hline.style_solid, color=color.new(color.blue, 50))
+// hline(showfib ? 50 : na, linestyle=hline.style_solid, color=color.new(color.blue, 50))
+// hline(showfib ? 36 : na, linestyle=hline.style_solid, color=color.new(color.blue, 50))
+// hline(showfib ? 18 : na, linestyle=hline.style_solid, color=color.new(color.blue, 50))
 
 //EOT 1
 //Vars

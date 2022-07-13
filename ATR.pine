@@ -1,0 +1,14 @@
+//@version=5
+indicator(title="Average True Range", shorttitle="ATR", overlay=false, timeframe="", timeframe_gaps=true)
+ATRlength = input.int(title="Length", defval=14, minval=1)
+ATRsmoothing = input.string(title="Smoothing", defval="RMA", options=["RMA", "SMA", "EMA", "WMA"])
+ma_function(source, ATRlength) =>
+	switch ATRsmoothing
+		"RMA" => ta.rma(source, ATRlength)
+		"SMA" => ta.sma(source, ATRlength)
+		"EMA" => ta.ema(source, ATRlength)
+		=> ta.wma(source, ATRlength)
+
+ATR = ma_function(ta.tr(true), ATRlength)
+
+// plot(ma_function(ta.tr(true), ATRlength), title = "ATR", color=color.new(#B71C1C, 0))

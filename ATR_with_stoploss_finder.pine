@@ -1,0 +1,30 @@
+//@version=5
+indicator(title="Average True Range Stop Loss Finder", shorttitle="ATR", overlay=true)
+
+ATRlength = input.int(title="Length", defval=14, minval=1)
+ATRsmoothing = input.string(title="Smoothing", defval="RMA", options=["RMA", "SMA", "EMA", "WMA"])
+m = input(1.5, "Multiplier")
+ATRsrc1 = input(high)
+ATRsrc2 = input(low)
+
+collong = input(color.teal, "Low Line Color",inline ="1")
+colshort = input(color.red, "High Line Color",inline ="2")
+
+ma_function(source, ATRlength) =>
+	if ATRsmoothing == "RMA"
+		ta.rma(source, ATRlength)
+	else
+		if ATRsmoothing == "SMA"
+			ta.sma(source, ATRlength)
+		else
+			if ATRsmoothing == "EMA"
+				ta.ema(source, ATRlength)
+			else
+				ta.wma(source, ATRlength)
+				
+a = ma_function(ta.tr(true), ATRlength) * m
+x = ma_function(ta.tr(true), ATRlength) * m + ATRsrc1
+x2 = ATRsrc2 - ma_function(ta.tr(true), ATRlength) * m
+
+p1 = plot(x, title = "ATR Short Stop Loss", color= colshort, transp=20)
+p2 = plot(x2, title = "ATR Long Stop Loss", color= collong, transp=20)

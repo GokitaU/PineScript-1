@@ -1,0 +1,54 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © ThiagoSchmitz
+
+// Descrition
+// This simple indicator will plot the take profit and stop loss values based on the ATR indicator.
+// It's possible to set how many times the ATR value will be applied to the closing price and 
+// what type of trade will be used, Long or Short
+
+//@version=4
+study("ATR Take and Stop", shorttitle="ATR T&S", overlay=true, max_bars_back=500)
+
+// Inputs
+length = input(title="ATR Length", defval=14, minval=1)
+tradetype = input(defval="Long", title="Trade Type", options=["Long", "Short"])
+takeprofit = input(1, "Take Profit Times ATR", input.float, minval=0.1)
+stoploss = input(1.6, "Stop Loss Times ATR", input.float, minval=0.1)
+index = input(0, "Display Index", input.integer)
+showtake = input(true, "Show Take Profit", input.bool)
+showstop = input(true, "Show Stop Loss", input.bool)
+showatr = input(true, "Show ATR", input.bool)
+
+// Functions
+getMA(series, length) => rma(series, length)
+getTV(value) => round(value * 100000) / 100000
+
+// Variables
+atr = getMA(tr(true), length)[index]
+posTake = tradetype == "Long" ? close[index] + (takeprofit * atr) : close[index] - (takeprofit * atr)
+posStop = tradetype == "Long" ? close[index] - (stoploss * atr) : close[index] + (stoploss * atr)
+colorTake = color.new(color.lime, 80)
+colorStop = color.new(color.red, 80)
+
+var lbl = label.new(bar_index[index], high[index], text="ATR", textcolor=color.white, xloc=xloc.bar_index, style=label.style_none, yloc=yloc.price)
+var take = label.new(bar_index[index], posTake , text="Take Profit: " + tostring(posTake), textcolor=color.white, xloc=xloc.bar_index, style=label.style_none, yloc=yloc.price)
+var stop = label.new(bar_index[index], posStop, text="Stop Loss: " + tostring(posStop), textcolor=color.white, xloc=xloc.bar_index, style=label.style_none, yloc=yloc.price)
+    
+// Labels
+if showatr
+    label.set_x(lbl, bar_index[index])
+    label.set_y(lbl, max(posTake, posStop) + atr(length) / 2)
+    label.set_text(lbl, text="ATR: " + tostring(getTV(atr)))
+if showtake
+    label.set_x(take, bar_index[index])
+    label.set_y(take, posTake)
+    label.set_text(take, text="TP: " + tostring(getTV(posTake)))
+if showstop
+    label.set_x(stop, bar_index[index])
+    label.set_y(stop, posStop)
+    label.set_text(stop, text="SL: " + tostring(getTV(posStop)))
+
+// Plots
+plotcandle(close[index], posTake, close[index], posTake, title="Area Top", color=index == 0 ? colorTake : na, bordercolor=index == 0 ? colorTake : na, wickcolor=na, show_last=1)
+plotcandle(close[index], close, posStop, posStop, title="Area Bottom", color=index == 0 ? colorStop : na, bordercolor=index == 0 ? colorStop : na, wickcolor=na, show_last=1)
+

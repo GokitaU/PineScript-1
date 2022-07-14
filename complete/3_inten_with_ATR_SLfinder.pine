@@ -1,6 +1,10 @@
 // This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
 // © one_min_spec
 
+// **************************
+// Don't use this it only works on GMT only on this coin
+// **************************
+
 // iska result ATRinputTP ("Multiply in TP") ko 1.1 (line 538)
 // set karte hai to 651% ka profit $10 ke position se
 
@@ -535,7 +539,7 @@ shortCondition = hullShortCond and volatShortCond ? true : false
 LongSL = ATRx2
 ShortSL = ATRx
 
-ATRinputTP = input.float(title="Multiply in TP", defval=1.5, minval=1)
+ATRinputTP = input.float(title="Multiply in TP", defval=1.1, minval=1)
 
 LongTP = close + ((close - ATRx2) * ATRinputTP)
 ShortTP = close - ((ATRx - close) * ATRinputTP)

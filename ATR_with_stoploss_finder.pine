@@ -23,8 +23,9 @@ ma_function(source, ATRlength) =>
 				ta.wma(source, ATRlength)
 				
 a = ma_function(ta.tr(true), ATRlength) * m
-x = ma_function(ta.tr(true), ATRlength) * m + ATRsrc1
-x2 = ATRsrc2 - ma_function(ta.tr(true), ATRlength) * m
+ATRx = ma_function(ta.tr(true), ATRlength) * m + ATRsrc1
+ATRx2 = ATRsrc2 - ma_function(ta.tr(true), ATRlength) * m
+// ATRx - is short stop loss and ATRx2- is long stop loss
 
-p1 = plot(x, title = "ATR Short Stop Loss", color= colshort, transp=20)
-p2 = plot(x2, title = "ATR Long Stop Loss", color= collong, transp=20)
+p1 = plot(ATRx, title = "ATR Short Stop Loss", color= colshort, transp=20)
+p2 = plot(ATRx2, title = "ATR Long Stop Loss", color= collong, transp=20)

@@ -1,6 +1,11 @@
 // This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
 // © one_min_spec
 
+// isme maine sahi tarike se TP and SL ka calculation kiya hai
+// isme maine normal ATR se TP and SL ka calculation kiya hai
+// iska result when SL and TP multiplier is both 6  (line 528)
+
+
 //@version=5
 strategy("1 min TradeIQ", overlay=true)
 

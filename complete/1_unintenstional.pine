@@ -1,6 +1,10 @@
 // This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
 // © one_min_spec
 
+// ye un-intentional isliye hai kyu ki isme ATR se TP or SL ka hone wala calculation me galti tha 
+// isme ham TP and SL ka calculation open price se karte the jabki hamko close se karna chahiye tha
+// ska result when SL multiplier is 6 and TP multiplier is 7  (line 526)
+
 //@version=5
 strategy("1 min TradeIQ", overlay=true)
 

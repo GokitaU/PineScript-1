@@ -513,12 +513,6 @@ volatShortCond = spike < VolOscY ? true : false
 
 shortCondition = hullShortCond and volatShortCond ? true : false
 
-LongSL = pvtlos
-ShortSL = pvthis
-
-
-LongTP = open + ((open - LongSL) * 1.5)
-ShortTP = open - ((ShortSL - open) * 1.5)
 
 // // using ATR for stoploss and take profit
 
@@ -575,8 +569,16 @@ if (conditionSell and strategy.position_size == 0)
 //     strategy.entry("Sell Stop", strategy.short, oca_name="Breakout", oca_type=strategy.oca.cancel, when= shortCondition)
 //     strategy.exit("Sell Exit", "Sell Stop", limit=ShortTP, stop=ShortSL)
 
-
+//--------------------------------------------------------
 
 
 // LongSL = stopLevel < pvtlos ? stopLevel : pvtlos
 // ShortSL = stopLevel > pvthis ? stopLevel : pvthis
+
+//--------------------------------------------------------
+// LongSL = pvtlos
+// ShortSL = pvthis
+
+
+// LongTP = open + ((open - LongSL) * 1.5)
+// ShortTP = open - ((ShortSL - open) * 1.5)

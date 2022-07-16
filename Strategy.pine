@@ -1,8 +1,10 @@
 // This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
 // © one_min_spec
 
-// iska result ATRinputTP ("Multiply in TP") ko 1.1 (line 538)
-// set karte hai to 651% ka profit $10 ke position se
+// isme maine sahi tarike se TP and SL ka calculation kiya hai
+// isme maine normal ATR se TP and SL ka calculation kiya hai
+// iska result when SL and TP multiplier is both 6  (line 528)
+
 
 //@version=5
 strategy("1 min TradeIQ", overlay=true)
@@ -463,30 +465,20 @@ stopLevel = ta.valuewhen(pvtlo_, low[pvtLenR], 0)
 // 🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺
 // 🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺
 
-// ATR Stoploss finder
+// ATR
 
 ATRlength = input.int(title="Length", defval=14, minval=1)
 ATRsmoothing = input.string(title="Smoothing", defval="RMA", options=["RMA", "SMA", "EMA", "WMA"])
-m = input(1.5, "Multiplier")
-ATRsrc1 = input(high)
-ATRsrc2 = input(low)
-
 ma_function(source, ATRlength) =>
-	if ATRsmoothing == "RMA"
-		ta.rma(source, ATRlength)
-	else
-		if ATRsmoothing == "SMA"
-			ta.sma(source, ATRlength)
-		else
-			if ATRsmoothing == "EMA"
-				ta.ema(source, ATRlength)
-			else
-				ta.wma(source, ATRlength)
-				
-a = ma_function(ta.tr(true), ATRlength) * m
-ATRx = ma_function(ta.tr(true), ATRlength) * m + ATRsrc1
-ATRx2 = ATRsrc2 - ma_function(ta.tr(true), ATRlength) * m
-// ATRx - is short stop loss and ATRx2- is long stop loss
+	switch ATRsmoothing
+		"RMA" => ta.rma(source, ATRlength)
+		"SMA" => ta.sma(source, ATRlength)
+		"EMA" => ta.ema(source, ATRlength)
+		=> ta.wma(source, ATRlength)
+
+ATR = ma_function(ta.tr(true), ATRlength)
+plot(ATR, title = "ATR")
+
 
 // 🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺
 
@@ -522,23 +514,25 @@ volatShortCond = spike < VolOscY ? true : false
 
 shortCondition = hullShortCond and volatShortCond ? true : false
 
-// LongSL = stopLevel < pvtlos ? stopLevel : pvtlos
-// ShortSL = stopLevel > pvthis ? stopLevel : pvthis
-
-// LongSL = pvtlos
-// ShortSL = pvthis
-
-// LongTP = open + ((open - LongSL) * 1.5)
-// ShortTP = open - ((ShortSL - open) * 1.5)
 
 // // using ATR for stoploss and take profit
-LongSL = ATRx2
-ShortSL = ATRx
 
-ATRinputTP = input.float(title="Multiply in TP", defval=1.5, minval=1)
+ATRinputSL = input.float(title="Multiply in SL", defval=2.0, minval=1)
+ATRinputTP = input.float(title="Multiply in TP", defval=3.0, minval=1)
 
-LongTP = close + ((close - ATRx2) * ATRinputTP)
-ShortTP = close - ((ATRx - close) * ATRinputTP)
+SL = ATR*ATRinputSL
+TP = ATR*ATRinputTP
+
+buySL = close-SL
+buyTP = close+TP
+
+sellSL = close+SL
+sellTP = close-TP
+
+plot(buySL, title = "buySL")
+plot(buyTP, title = "buyTP")
+// plot(sellSL, title = "sellSL")
+// plot(sellTP, title = "sellTP")
 
 startDateInp = input.int(title="Start Date", defval=5)
 endDateInp = input.int(title="End Date", defval=6)
@@ -550,24 +544,15 @@ EndDate = (time <= timestamp(syminfo.timezone, 2022, 7, endDateInp, 0, 0))
 
 timeInterval = StartDate and EndDate ? true : false
 
-// if (boomLongCond)
-//     strategy.entry("Buy Stop", strategy.long, oca_name="Breakout", oca_type=strategy.oca.cancel, when= longCondition)
-//     strategy.exit("Buy Exit", "Buy Stop", limit=LongTP, stop=LongSL)
-
-
-// if (boomShortCond)
-//     strategy.entry("Sell Stop", strategy.short, oca_name="Breakout", oca_type=strategy.oca.cancel, when= shortCondition)
-//     strategy.exit("Sell Exit", "Sell Stop", limit=ShortTP, stop=ShortSL)
-
 // with ATR
 if (boomLongCond and timeInterval)
-    strategy.entry("Buy Stop", strategy.long, oca_name="Breakout", oca_type=strategy.oca.cancel, when= longCondition)
-    strategy.exit("Buy Exit", "Buy Stop", limit=LongTP, stop=LongSL)
-
+    strategy.entry("Buy", strategy.long, oca_name="Breakout", oca_type=strategy.oca.cancel, when= longCondition)
+strategy.exit("Buy Exit", "Buy", limit=buyTP, stop=buySL)
+    
 
 if (boomShortCond and timeInterval)
-    strategy.entry("Sell Stop", strategy.short, oca_name="Breakout", oca_type=strategy.oca.cancel, when= shortCondition)
-    strategy.exit("Sell Exit", "Sell Stop", limit=ShortTP, stop=ShortSL)
+    strategy.entry("Sell", strategy.short, oca_name="Breakout", oca_type=strategy.oca.cancel, when= shortCondition)
+strategy.exit("Sell Exit", "Sell", limit=sellTP, stop=sellSL)
 
 
 // if tradeStart and strategy.position_size == 0

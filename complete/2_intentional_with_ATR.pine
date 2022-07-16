@@ -513,9 +513,6 @@ volatShortCond = spike < VolOscY ? true : false
 
 shortCondition = hullShortCond and volatShortCond ? true : false
 
-// LongSL = stopLevel < pvtlos ? stopLevel : pvtlos
-// ShortSL = stopLevel > pvthis ? stopLevel : pvthis
-
 LongSL = pvtlos
 ShortSL = pvthis
 
@@ -531,17 +528,43 @@ ATRinputTP = input.int(title="Multiply in TP", defval=3, minval=1)
 SL = ATR*ATRinputSL
 TP = ATR*ATRinputTP
 
-
+// TIME INTERVAL FEATURE
 
 startDateInp = input.int(title="Start Date", defval=5)
 endDateInp = input.int(title="End Date", defval=6)
 
-
 StartDate = (time >= timestamp(syminfo.timezone, 2022, 7, startDateInp, 0, 0))
-
 EndDate = (time <= timestamp(syminfo.timezone, 2022, 7, endDateInp, 0, 0))
 
 timeInterval = StartDate and EndDate ? true : false
+// ------------------------------------------------------------------------------
+
+
+bool conditionBuy = boomLongCond and timeInterval and longCondition
+bool conditionSell = boomShortCond and timeInterval and shortCondition
+
+// with ATR
+if (conditionBuy and strategy.position_size == 0)
+    strategy.entry("Buy Stop", strategy.long, oca_name="Breakout", oca_type=strategy.oca.cancel)
+    strategy.exit("Buy Exit", "Buy Stop", limit=close+TP, stop=close-SL)
+
+if (conditionSell and strategy.position_size == 0)
+    strategy.entry("Sell Stop", strategy.short, oca_name="Breakout", oca_type=strategy.oca.cancel)
+    strategy.exit("Sell Exit", "Sell Stop", limit=close-TP, stop=close+SL)
+
+
+// if tradeStart and strategy.position_size == 0
+
+// 💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰STRATEGY💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰
+
+
+
+
+
+
+
+
+// OLD COMMENTS
 
 // if (boomLongCond)
 //     strategy.entry("Buy Stop", strategy.long, oca_name="Breakout", oca_type=strategy.oca.cancel, when= longCondition)
@@ -552,17 +575,8 @@ timeInterval = StartDate and EndDate ? true : false
 //     strategy.entry("Sell Stop", strategy.short, oca_name="Breakout", oca_type=strategy.oca.cancel, when= shortCondition)
 //     strategy.exit("Sell Exit", "Sell Stop", limit=ShortTP, stop=ShortSL)
 
-// with ATR
-if (boomLongCond and timeInterval)
-    strategy.entry("Buy Stop", strategy.long, oca_name="Breakout", oca_type=strategy.oca.cancel, when= longCondition)
-    strategy.exit("Buy Exit", "Buy Stop", limit=close+TP, stop=close-SL)
 
 
-if (boomShortCond and timeInterval)
-    strategy.entry("Sell Stop", strategy.short, oca_name="Breakout", oca_type=strategy.oca.cancel, when= shortCondition)
-    strategy.exit("Sell Exit", "Sell Stop", limit=close-TP, stop=close+SL)
 
-
-// if tradeStart and strategy.position_size == 0
-
-// 💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰STRATEGY💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰
+// LongSL = stopLevel < pvtlos ? stopLevel : pvtlos
+// ShortSL = stopLevel > pvthis ? stopLevel : pvthis

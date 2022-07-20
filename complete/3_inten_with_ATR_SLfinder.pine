@@ -531,6 +531,9 @@ shortCondition = hullShortCond and volatShortCond ? true : false
 LongSL = ATRx2
 ShortSL = ATRx
 
+perLongSL = (100 * ((close-LongSL)/LongSL)) <= 0.8 ? true :false
+perShortSL =  (100 * ((ShortSL-close)/ShortSL)) <= 0.8 ? true :false
+
 ATRinputTP = input.float(title="Multiply in TP", defval=1.1, minval=1)
 
 LongTP = close + ((close - ATRx2) * ATRinputTP)
@@ -552,11 +555,11 @@ bool conditionBuy = boomLongCond and timeInterval and longCondition
 bool conditionSell = boomShortCond and timeInterval and shortCondition
 
 // with ATR stop loss finder
-if (conditionBuy and strategy.position_size == 0)
+if (conditionBuy and strategy.position_size == 0 and perLongSL)
     strategy.entry("Buy Stop", strategy.long, oca_name="Breakout", oca_type=strategy.oca.cancel)
     strategy.exit("Buy Exit", "Buy Stop", limit=LongTP, stop=LongSL)
 
-if (conditionSell and strategy.position_size == 0)
+if (conditionSell and strategy.position_size == 0 and perShortSL)
     strategy.entry("Sell Stop", strategy.short, oca_name="Breakout", oca_type=strategy.oca.cancel)
     strategy.exit("Sell Exit", "Sell Stop", limit=ShortTP, stop=ShortSL)
 

@@ -1,10 +1,12 @@
 // This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
 // © one_min_spec
 
-// isme maine sahi tarike se TP and SL ka calculation kiya hai
-// isme maine normal ATR se TP and SL ka calculation kiya hai
-// iska result when SL and TP multiplier is both 6  (line 528)
+// **************************
+// Don't use this it only works on GMT only on this coin
+// **************************
 
+// iska result ATRinputTP ("Multiply in TP") ko 1.1 (line 538)
+// set karte hai to 651% ka profit $10 ke position se
 
 //@version=5
 strategy("1 min TradeIQ", overlay=true)
@@ -465,20 +467,30 @@ stopLevel = ta.valuewhen(pvtlo_, low[pvtLenR], 0)
 // 🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺
 // 🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺
 
-// ATR
+// ATR Stoploss finder
 
 ATRlength = input.int(title="Length", defval=14, minval=1)
 ATRsmoothing = input.string(title="Smoothing", defval="RMA", options=["RMA", "SMA", "EMA", "WMA"])
+m = input(1.5, "Multiplier")
+ATRsrc1 = input(high)
+ATRsrc2 = input(low)
+
 ma_function(source, ATRlength) =>
-	switch ATRsmoothing
-		"RMA" => ta.rma(source, ATRlength)
-		"SMA" => ta.sma(source, ATRlength)
-		"EMA" => ta.ema(source, ATRlength)
-		=> ta.wma(source, ATRlength)
-
-ATR = ma_function(ta.tr(true), ATRlength)
-plot(ATR, title = "ATR")
-
+	if ATRsmoothing == "RMA"
+		ta.rma(source, ATRlength)
+	else
+		if ATRsmoothing == "SMA"
+			ta.sma(source, ATRlength)
+		else
+			if ATRsmoothing == "EMA"
+				ta.ema(source, ATRlength)
+			else
+				ta.wma(source, ATRlength)
+				
+a = ma_function(ta.tr(true), ATRlength) * m
+ATRx = ma_function(ta.tr(true), ATRlength) * m + ATRsrc1
+ATRx2 = ATRsrc2 - ma_function(ta.tr(true), ATRlength) * m
+// ATRx - is short stop loss and ATRx2- is long stop loss
 
 // 🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺
 
@@ -516,45 +528,73 @@ shortCondition = hullShortCond and volatShortCond ? true : false
 
 
 // // using ATR for stoploss and take profit
+LongSL = ATRx2
+ShortSL = ATRx
 
-ATRinputSL = input.float(title="Multiply in SL", defval=2.0, minval=1)
-ATRinputTP = input.float(title="Multiply in TP", defval=3.0, minval=1)
+perLongSL = (100 * ((close-LongSL)/LongSL)) <= 0.79 ? true :false
+perShortSL =  (100 * ((ShortSL-close)/ShortSL)) <= 0.79 ? true :false
 
-SL = ATR*ATRinputSL
-TP = ATR*ATRinputTP
-
-buySL = close-SL
-buyTP = close+TP
-
-sellSL = close+SL
-sellTP = close-TP
-
-plot(buySL, title = "buySL")
-plot(buyTP, title = "buyTP")
-// plot(sellSL, title = "sellSL")
-// plot(sellTP, title = "sellTP")
-
-startDateInp = input.int(title="Start Date", defval=5)
-endDateInp = input.int(title="End Date", defval=6)
+ATRinputTP = input.float(title="Multiply in TP", defval=1.1, minval=1)
 
 
-StartDate = (time >= timestamp(syminfo.timezone, 2022, 7, startDateInp, 0, 0))
 
-EndDate = (time <= timestamp(syminfo.timezone, 2022, 7, endDateInp, 0, 0))
+// lastEntryPrice = strategy.opentrades.entry_price(strategy.opentrades - 1)
 
-timeInterval = StartDate and EndDate ? true : false
+// lastEntryPrice sahi se calculate ho raha hai par jab usko LongTP ya ShortTP me close ke jagah likhte 
+// hai to wo na return karta hai kyu ki TP entry ke pahle candle par claculate hota hai par entry ka data
+// mere pas entry candle close hone ke ya entry milne ke baad aata hai
 
-// with ATR
-if (boomLongCond and timeInterval)
-    strategy.entry("Buy", strategy.long, oca_name="Breakout", oca_type=strategy.oca.cancel, when= longCondition)
-strategy.exit("Buy Exit", "Buy", limit=buyTP, stop=buySL)
-    
+// last entry price open position se le ke close position tak hi value return karta hai uske bad na return
+// karta hai aur ham to TP open position ke pahle wala candle par lete hai to isiliye na return hota hai
 
-if (boomShortCond and timeInterval)
-    strategy.entry("Sell", strategy.short, oca_name="Breakout", oca_type=strategy.oca.cancel, when= shortCondition)
-strategy.exit("Sell Exit", "Sell", limit=sellTP, stop=sellSL)
+
+
+LongTP = lastEntryPrice + ((close - ATRx2) * ATRinputTP)
+ShortTP = lastEntryPrice - ((ATRx - close) * ATRinputTP)
+
+// TIME INTERVAL FEATURE
+
+// startDateInp = input.int(title="Start Date", defval=5)
+// endDateInp = input.int(title="End Date", defval=6)
+
+// StartDate = (time >= timestamp(syminfo.timezone, 2022, 7, startDateInp, 0, 0))
+// EndDate = (time <= timestamp(syminfo.timezone, 2022, 7, endDateInp, 0, 0))
+
+// timeInterval = StartDate and EndDate ? true : false
+// ------------------------------------------------------------------------------
+
+
+// bool conditionBuy = boomLongCond and timeInterval and longCondition
+// bool conditionSell = boomShortCond and timeInterval and shortCondition
+
+bool conditionBuy = boomLongCond and longCondition
+bool conditionSell = boomShortCond and shortCondition
+
+// with ATR stop loss finder
+if (conditionBuy and strategy.position_size == 0 and perLongSL)
+    strategy.entry("Buy Stop", strategy.long, oca_name="Breakout", oca_type=strategy.oca.cancel)
+    strategy.exit("Buy Exit", "Buy Stop", limit=LongTP, stop=LongSL)
+
+if (conditionSell and strategy.position_size == 0 and perShortSL)
+    strategy.entry("Sell Stop", strategy.short, oca_name="Breakout", oca_type=strategy.oca.cancel)
+    strategy.exit("Sell Exit", "Sell Stop", limit=ShortTP, stop=ShortSL)
 
 
 // if tradeStart and strategy.position_size == 0
 
 // 💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰STRATEGY💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰💰
+
+
+
+
+
+// OLD COMMENTS
+
+// LongSL = stopLevel < pvtlos ? stopLevel : pvtlos
+// ShortSL = stopLevel > pvthis ? stopLevel : pvthis
+
+// LongSL = pvtlos
+// ShortSL = pvthis
+
+// LongTP = open + ((open - LongSL) * 1.5)
+// ShortTP = open - ((ShortSL - open) * 1.5)

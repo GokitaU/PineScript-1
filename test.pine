@@ -1,0 +1,56 @@
+// Pro Trading Art ke video se TP aur SL ko entry price se kaise calculate karte hai
+
+
+//@version=5
+strategy("Pro Trading Art - Three Black Crows And Three White Soldiers", "PTA- Three Black Crows & Three White Soldiers",
+ overlay=true, initial_capital=500, 
+ commission_type=strategy.commission.percent, 
+ commission_value=0.075, 
+ currency='USD', 
+ default_qty_type=strategy.cash, 
+ default_qty_value = 500, 
+ pyramiding = 1)
+
+rising = input.int(3, "Rising")
+falling = input.int(3, "Falling")
+
+longStopP = input.float(5, "Long Stop %", maxval=5)/100
+shortStopP = input.float(3, "Short Stop %", maxval=5)/100
+
+isBuy = ta.rising(close, rising) and ta.rising(volume, rising)
+
+isSell = ta.falling(close, falling) and ta.rising(volume, falling)
+
+
+longStop = if strategy.position_size > 0
+    Low = low[bar_index - strategy.opentrades.entry_bar_index(strategy.opentrades - 1)]
+    Low - Low * longStopP
+
+shortStop = if strategy.position_size < 0
+    High = high[bar_index - strategy.opentrades.entry_bar_index(strategy.opentrades - 1)]
+    High + High *shortStopP
+
+
+longProfitP = input.float(5, "Long Profit %")/100
+shortProfitp = input.float(5, "Short Profit %")/100
+
+longProfit = if strategy.position_size > 0
+    High = high[bar_index - strategy.opentrades.entry_bar_index(strategy.opentrades - 1)]
+    High + High * longProfitP
+
+shortProfit = if strategy.position_size < 0
+    Low = low[bar_index - strategy.opentrades.entry_bar_index(strategy.opentrades - 1)]
+    Low - Low * shortProfitp
+    
+    
+if isBuy or close > shortStop
+    strategy.entry(id="Long", direction=strategy.long)
+
+if isSell or close < longStop
+    strategy.entry(id="Short", direction=strategy.short)
+
+
+if strategy.position_size > 0
+    strategy.exit("Long Profit", from_entry="Long", limit=longProfit)
+if strategy.position_size < 0
+    strategy.exit("Short Profit", from_entry="Short", limit=shortProfit)

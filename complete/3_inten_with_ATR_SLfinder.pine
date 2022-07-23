@@ -528,40 +528,63 @@ shortCondition = hullShortCond and volatShortCond ? true : false
 
 
 // // using ATR for stoploss and take profit
-LongSL = ATRx2
-ShortSL = ATRx
+LongSL = ATRx2[1]
+ShortSL = ATRx[1]
 
-perLongSL = (100 * ((close-LongSL)/LongSL)) <= 0.8 ? true :false
-perShortSL =  (100 * ((ShortSL-close)/ShortSL)) <= 0.8 ? true :false
+perLongSL = (100 * ((close-LongSL)/LongSL)) <= 0.79 ? true :false
+perShortSL =  (100 * ((ShortSL-close)/ShortSL)) <= 0.79 ? true :false
 
-ATRinputTP = input.float(title="Multiply in TP", defval=1.1, minval=1)
+ATRinputTP = input.float(title="Multiply in TP", defval=1.5, minval=1)
 
-LongTP = close + ((close - ATRx2) * ATRinputTP)
-ShortTP = close - ((ATRx - close) * ATRinputTP)
+// LongTP = close + ((close - ATRx2) * ATRinputTP)
+// ShortTP = close - ((ATRx - close) * ATRinputTP)
+
+LongTP = if strategy.position_size > 0
+    Low = open[bar_index - strategy.opentrades.entry_bar_index(strategy.opentrades - 1)]
+    Low + ((Low - ATRx2[1]) * ATRinputTP)
+
+ShortTP = if strategy.position_size < 0
+    High = open[bar_index - strategy.opentrades.entry_bar_index(strategy.opentrades - 1)]
+    High - ((ATRx[1] - High) * ATRinputTP)
+
 
 // TIME INTERVAL FEATURE
 
-startDateInp = input.int(title="Start Date", defval=5)
-endDateInp = input.int(title="End Date", defval=6)
+// startDateInp = input.int(title="Start Date", defval=5)
+// endDateInp = input.int(title="End Date", defval=6)
 
-StartDate = (time >= timestamp(syminfo.timezone, 2022, 7, startDateInp, 0, 0))
-EndDate = (time <= timestamp(syminfo.timezone, 2022, 7, endDateInp, 0, 0))
+// StartDate = (time >= timestamp(syminfo.timezone, 2022, 7, startDateInp, 0, 0))
+// EndDate = (time <= timestamp(syminfo.timezone, 2022, 7, endDateInp, 0, 0))
 
-timeInterval = StartDate and EndDate ? true : false
+// timeInterval = StartDate and EndDate ? true : false
 // ------------------------------------------------------------------------------
 
 
-bool conditionBuy = boomLongCond and timeInterval and longCondition
-bool conditionSell = boomShortCond and timeInterval and shortCondition
+// bool conditionBuy = boomLongCond and timeInterval and longCondition
+// bool conditionSell = boomShortCond and timeInterval and shortCondition
 
-// with ATR stop loss finder
+bool conditionBuy = boomLongCond and longCondition
+bool conditionSell = boomShortCond and shortCondition
+
+var bought = 0
+var sold = 0
+
 if (conditionBuy and strategy.position_size == 0 and perLongSL)
     strategy.entry("Buy Stop", strategy.long, oca_name="Breakout", oca_type=strategy.oca.cancel)
-    strategy.exit("Buy Exit", "Buy Stop", limit=LongTP, stop=LongSL)
+    bought := 1
 
 if (conditionSell and strategy.position_size == 0 and perShortSL)
     strategy.entry("Sell Stop", strategy.short, oca_name="Breakout", oca_type=strategy.oca.cancel)
+    sold :=1
+
+
+if strategy.position_size > 0 and bought == 1
+    strategy.exit("Buy Exit", "Buy Stop", limit=LongTP, stop=LongSL)
+    bought:=0
+if strategy.position_size < 0 and sold == 1
     strategy.exit("Sell Exit", "Sell Stop", limit=ShortTP, stop=ShortSL)
+    sold :=0
+
 
 
 // if tradeStart and strategy.position_size == 0
